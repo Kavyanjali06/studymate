@@ -19,9 +19,9 @@ python manage.py runserver
 
 Confirm the site works at `http://127.0.0.1:8000/`.
 
-## 2. Create a private GitHub repository
+## 2. Create a GitHub repository
 
-On GitHub, create an empty repository named `studymate` and choose **Private**. Do not initialize it with a README or other files.
+On GitHub, create an empty repository named `studymate`. Do not initialize it with a README or other files.
 
 ## 3. Push the existing project
 
@@ -46,19 +46,19 @@ Sign in to [vercel.com](https://vercel.com) using GitHub and approve access to t
 
 ## 5. Import StudyMate
 
-In Vercel, select **Add New → Project**, import the `studymate` repository, and keep the project root as the repository root. Vercel detects the Python function in `api/index.py` and installs the packages from `requirements.txt`.
+In Vercel, select **Add New → Project**, import the `studymate` repository, and keep the project root as the repository root. Vercel detects Django from `manage.py`, reads the WSGI entry point from `studymate/settings.py`, and installs packages from `requirements.txt`.
 
-## 6. Configure the build and function
+## 6. Configure the build
 
-The repository's `vercel.json` already contains the build command and routes. If the dashboard asks for these values, use:
+The repository's `vercel.json` runs migrations during the build. Vercel automatically runs `collectstatic` when `STATIC_ROOT` is configured, so no custom rewrite or Python function entry point is needed.
 
 Build command:
 
 ```bash
-python manage.py migrate --noinput && python manage.py collectstatic --noinput
+python manage.py migrate --noinput
 ```
 
-The Python entry point is `api/index.py`, which loads the existing Django WSGI application. Vercel routes web requests to this function. WhiteNoise serves collected static files bundled with the function.
+Vercel serves collected static files from its CDN. Keep WhiteNoise configured as a fallback for local and other supported deployments.
 
 ## 7. Set environment variables
 
@@ -66,7 +66,7 @@ Add these in **Project → Settings → Environment Variables**:
 
 - `SECRET_KEY`: a new, long random value; do not reuse or publish it.
 - `DEBUG`: `False`.
-- `DATABASE_URL`: connection string from the PostgreSQL integration described below.
+- `DATABASE_URL` (recommended): connection string from the PostgreSQL integration described below. It can be omitted to use SQLite, but SQLite data is not persistent on Vercel.
 - `ALLOWED_HOSTS`: `.vercel.app` (and add any custom domain host if you use one).
 - `CSRF_TRUSTED_ORIGINS`: `https://*.vercel.app` (and add `https://your-custom-domain` if used).
 
@@ -89,7 +89,7 @@ Select **Deploy**. When the build completes, open the HTTPS URL shown by Vercel.
 
 ## 10. Create hosted admin login
 
-Local SQLite users and passwords are not copied into hosted PostgreSQL. Create an admin user after deployment using Vercel's supported project command/terminal workflow, or temporarily run the one-time management command as part of a secure deployment workflow:
+Local SQLite users and passwords are not copied into hosted PostgreSQL. For persistent hosted admin access, configure PostgreSQL and run the one-time management command from a trusted environment with `DATABASE_URL` set to the hosted database:
 
 ```bash
 python manage.py createsuperuser
@@ -109,4 +109,4 @@ Check the public HTTPS URL and test:
 6. Profile update.
 7. Admin at `/admin/`.
 
-Vercel deployments and functions can have plan-dependent runtime limits. If you encounter a function timeout or unsupported runtime limitation, use a Django-oriented host such as Render instead.
+Vercel deployments can have plan-dependent runtime limits. If you encounter a runtime limitation, use a Django-oriented host such as Render instead.
