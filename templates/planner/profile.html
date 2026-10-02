@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+
+{% block title %}Profile | StudyMate{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row g-4">
+        <div class="col-lg-4">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-body p-4">
+                    <h4 class="fw-bold mb-3">Profile summary</h4>
+                    <p class="mb-1"><strong>Username:</strong> {{ request.user.username }}</p>
+                    <p class="mb-1"><strong>Email:</strong> {{ request.user.email }}</p>
+                    <p class="mb-1"><strong>Total subjects:</strong> {{ total_subjects }}</p>
+                    <p class="mb-1"><strong>Total tasks:</strong> {{ total_tasks }}</p>
+                    <p class="mb-1"><strong>Completed tasks:</strong> {{ completed_tasks }}</p>
+                    <p class="mb-0"><strong>Progress:</strong> {{ progress }}%</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-8">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body p-4">
+                    <h4 class="fw-bold mb-3">Update profile</h4>
+                    <form method="post" novalidate>
+                        {% csrf_token %}
+                        {% for field in form %}
+                            <div class="mb-3">
+                                <label for="{{ field.id_for_label }}" class="form-label">{{ field.label }}</label>
+                                {{ field }}
+                                {% if field.errors %}
+                                    <div class="text-danger small mt-1">{{ field.errors|join:', ' }}</div>
+                                {% endif %}
+                            </div>
+                        {% endfor %}
+                        <button type="submit" class="btn btn-primary">Save changes</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

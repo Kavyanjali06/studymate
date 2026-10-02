@@ -1,0 +1,87 @@
+body {
+    background: linear-gradient(180deg, #f5f7ff 0%, #ffffff 100%);
+    color: #1f2937;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+.hero-section {
+    padding-top: 4rem;
+    padding-bottom: 4rem;
+}
+
+.hero-card,
+.feature-card,
+.step-box,
+.dashboard-card,
+.card {
+    border-radius: 1.2rem;
+}
+
+.feature-card,
+.step-box,
+.dashboard-card {
+    background: #ffffff;
+    border: 1px solid rgba(13, 110, 253, 0.08);
+}
+
+.stat-box {
+    background: linear-gradient(180deg, #edf4ff, #fff);
+    border: 1px solid rgba(13, 110, 253, 0.08);
+}
+
+.step-number {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.5rem;
+    height: 2.5rem;
+    background: #0d6efd;
+    color: #fff;
+    border-radius: 50%;
+    font-weight: 700;
+}
+
+.benefit-list li {
+    margin-bottom: 0.9rem;
+    font-size: 1.05rem;
+}
+
+.footer {
+    background: #0f172a;
+    color: #e2e8f0;
+}
+
+.table td,
+.table th {
+    vertical-align: middle;
+}
+
+.progress {
+    height: 0.8rem;
+}
+
+.form-control,
+.form-select {
+    border-radius: 0.7rem;
+    min-height: 48px;
+}
+
+.btn {
+    border-radius: 0.75rem;
+}
+
+@media (max-width: 767.98px) {
+    .hero-section {
+        padding-top: 2.5rem;
+    }
+
+    .card,
+    .feature-card,
+    .step-box {
+        border-radius: 1rem;
+    }
+
+    .d-flex.justify-content-between {
+        align-items: flex-start;
+    }
+}

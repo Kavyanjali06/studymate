@@ -1,0 +1,147 @@
+{% extends 'base.html' %}
+
+{% block title %}Dashboard | StudyMate{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="d-flex justify-content-between align-items-center flex-wrap gap-3 mb-4">
+        <div>
+            <p class="text-uppercase small text-secondary mb-1">Dashboard</p>
+            <h2 class="mb-0">Welcome, {{ request.user.username }}</h2>
+        </div>
+        <a href="{% url 'task_add' %}" class="btn btn-primary"><i class="bi bi-plus-lg me-1"></i>Add Task</a>
+    </div>
+
+    <div class="row g-4 mb-4">
+        <div class="col-sm-6 col-xl-2">
+            <div class="dashboard-card card h-100 border-0 shadow-sm">
+                <div class="card-body">
+                    <p class="small text-secondary mb-1">Total Subjects</p>
+                    <h3 class="mb-0">{{ total_subjects }}</h3>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6 col-xl-2">
+            <div class="dashboard-card card h-100 border-0 shadow-sm">
+                <div class="card-body">
+                    <p class="small text-secondary mb-1">Total Tasks</p>
+                    <h3 class="mb-0">{{ total_tasks }}</h3>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6 col-xl-2">
+            <div class="dashboard-card card h-100 border-0 shadow-sm">
+                <div class="card-body">
+                    <p class="small text-secondary mb-1">Completed</p>
+                    <h3 class="mb-0">{{ completed_tasks }}</h3>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6 col-xl-2">
+            <div class="dashboard-card card h-100 border-0 shadow-sm">
+                <div class="card-body">
+                    <p class="small text-secondary mb-1">Pending</p>
+                    <h3 class="mb-0">{{ pending_tasks }}</h3>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-12 col-xl-4">
+            <div class="dashboard-card card h-100 border-0 shadow-sm">
+                <div class="card-body">
+                    <p class="small text-secondary mb-2">Overall Progress</p>
+                    <div class="d-flex align-items-center justify-content-between mb-2">
+                        <h3 class="mb-0">{{ progress }}%</h3>
+                    </div>
+                    <div class="progress" role="progressbar" aria-label="Overall progress" aria-valuenow="{{ progress }}" aria-valuemin="0" aria-valuemax="100">
+                        <div class="progress-bar" style="width: {{ progress }}%"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row g-4">
+        <div class="col-lg-6">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-header bg-white border-0 pt-4">
+                    <h4 class="mb-0">Upcoming tasks</h4>
+                </div>
+                <div class="card-body">
+                    {% if upcoming_tasks %}
+                        <div class="list-group list-group-flush">
+                            {% for task in upcoming_tasks %}
+                                <div class="list-group-item px-0">
+                                    <div class="d-flex justify-content-between gap-3 align-items-start">
+                                        <div>
+                                            <h6 class="mb-1"><a href="{% url 'task_detail' task.pk %}" class="text-decoration-none text-dark">{{ task.title }}</a></h6>
+                                            <small class="text-secondary">{{ task.subject.name }} • {{ task.deadline }}</small>
+                                        </div>
+                                        <span class="badge {% if task.priority == 'HIGH' %}bg-danger{% elif task.priority == 'MEDIUM' %}bg-warning text-dark{% else %}bg-secondary{% endif %}">{{ task.priority }}</span>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <p class="text-secondary mb-0">No upcoming tasks.</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-6">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-header bg-white border-0 pt-4">
+                    <h4 class="mb-0">Recent tasks</h4>
+                </div>
+                <div class="card-body">
+                    {% if recent_tasks %}
+                        <div class="list-group list-group-flush">
+                            {% for task in recent_tasks %}
+                                <div class="list-group-item px-0">
+                                    <div class="d-flex justify-content-between gap-3 align-items-start">
+                                        <div>
+                                            <h6 class="mb-1"><a href="{% url 'task_detail' task.pk %}" class="text-decoration-none text-dark">{{ task.title }}</a></h6>
+                                            <small class="text-secondary">{{ task.subject.name }} • {{ task.created_at|date:'M d, Y' }}</small>
+                                        </div>
+                                        <span class="badge {% if task.completed %}bg-success{% else %}bg-light text-dark{% endif %}">{% if task.completed %}Completed{% else %}Pending{% endif %}</span>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <p class="text-secondary mb-0">No recent tasks.</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row g-4 mt-1">
+        <div class="col-lg-6">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-header bg-white border-0 pt-4">
+                    <h4 class="mb-0">Subject summary</h4>
+                </div>
+                <div class="card-body">
+                    {% if subject_summary %}
+                        {% for item in subject_summary %}
+                            <div class="mb-3">
+                                <div class="d-flex justify-content-between mb-1">
+                                    <strong>{{ item.subject.name }}</strong>
+                                    <span>{{ item.progress }}%</span>
+                                </div>
+                                <div class="progress" role="progressbar" aria-label="{{ item.subject.name }} progress" aria-valuenow="{{ item.progress }}" aria-valuemin="0" aria-valuemax="100">
+                                    <div class="progress-bar" style="width: {{ item.progress }}%"></div>
+                                </div>
+                                <small class="text-secondary">{{ item.completed_count }} of {{ item.task_count }} tasks completed</small>
+                            </div>
+                        {% endfor %}
+                    {% else %}
+                        <p class="text-secondary mb-0">No subjects yet.</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

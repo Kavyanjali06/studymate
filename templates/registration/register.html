@@ -1,0 +1,65 @@
+{% extends 'base.html' %}
+
+{% block title %}Register | StudyMate{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-6 col-md-8">
+            <div class="card shadow-sm border-0 rounded-4">
+                <div class="card-body p-4 p-lg-5">
+                    <h2 class="text-center mb-4 fw-bold">Create your account</h2>
+
+                    <form method="post" novalidate>
+                        {% csrf_token %}
+
+                        <div class="mb-3">
+                            <label for="id_username" class="form-label">Username</label>
+                            {{ form.username }}
+                            {% if form.username.errors %}
+                                <div class="text-danger small mt-1">{{ form.username.errors|join:', ' }}</div>
+                            {% endif %}
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="id_email" class="form-label">Email</label>
+                            {{ form.email }}
+                            {% if form.email.errors %}
+                                <div class="text-danger small mt-1">{{ form.email.errors|join:', ' }}</div>
+                            {% endif %}
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="id_password" class="form-label">Password</label>
+                            <div class="input-group">
+                                {{ form.password }}
+                                <button type="button" class="btn btn-outline-secondary" data-password-toggle="id_password">Show</button>
+                            </div>
+                            {% if form.password.errors %}
+                                <div class="text-danger small mt-1">{{ form.password.errors|join:', ' }}</div>
+                            {% endif %}
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="id_confirm_password" class="form-label">Confirm Password</label>
+                            <div class="input-group">
+                                {{ form.confirm_password }}
+                                <button type="button" class="btn btn-outline-secondary" data-password-toggle="id_confirm_password">Show</button>
+                            </div>
+                            {% if form.confirm_password.errors %}
+                                <div class="text-danger small mt-1">{{ form.confirm_password.errors|join:', ' }}</div>
+                            {% endif %}
+                        </div>
+
+                        <button type="submit" class="btn btn-primary w-100">Register</button>
+                    </form>
+
+                    <p class="text-center mt-4 mb-0">
+                        Already have an account? <a href="{% url 'login' %}">Login</a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
