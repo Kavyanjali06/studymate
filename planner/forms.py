@@ -1,4 +1,5 @@
 from django import forms
+from django.contrib.auth import password_validation
 from django.contrib.auth.models import User
 from .models import StudyTask, Subject
 
@@ -28,6 +29,12 @@ class RegisterForm(forms.Form):
 
         if password and confirm_password and password != confirm_password:
             self.add_error("confirm_password", "Passwords do not match.")
+
+        if password:
+            try:
+                password_validation.validate_password(password)
+            except forms.ValidationError as error:
+                self.add_error("password", error)
 
         return cleaned_data
 
